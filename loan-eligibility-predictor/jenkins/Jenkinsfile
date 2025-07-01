@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker-compose -f docker/docker-compose.yml build'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'echo "Running tests"'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker-compose -f docker/docker-compose.yml up -d'
+            }
+        }
+    }
+}
