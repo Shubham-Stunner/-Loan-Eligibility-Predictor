@@ -1,0 +1,5 @@
+Flask
+Flask-SQLAlchemy
+pymysql
+prometheus-flask-exporter
+tensorflow

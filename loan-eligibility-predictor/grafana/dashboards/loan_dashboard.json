@@ -1,0 +1,18 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Loan Predictions",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Prediction Requests",
+        "targets": [
+          {
+            "expr": "predict_requests_total",
+            "legendFormat": "requests"
+          }
+        ]
+      }
+    ]
+  }
+}
