@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from time import time
 
 from .model import load_model, predict
@@ -10,6 +10,10 @@ api_bp = Blueprint('api', __name__)
 
 # Load ML model once at blueprint load time
 model = load_model()
+
+@api_bp.route('/')
+def index():
+    return render_template('index.html')
 
 @api_bp.route('/predict', methods=['POST'])
 def predict_route():
