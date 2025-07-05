@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Eligibility Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Loan Eligibility Predictor</h1>
+    <form id="predict-form">
+        <label>Age: <input type="number" name="age" required></label>
+        <label>Income: <input type="number" name="income" step="0.01" required></label>
+        <label>Credit Score: <input type="number" name="credit_score" step="0.01" required></label>
+        <label>Loan Amount: <input type="number" name="loan_amount" step="0.01" required></label>
+        <label>Loan Term: <input type="number" name="loan_term" required></label>
+        <label>Employment Years: <input type="number" name="employment_years" step="0.1" required></label>
+        <label>Existing Debt: <input type="number" name="existing_debt" step="0.01" required></label>
+        <button type="submit">Predict</button>
+    </form>
+    <pre id="result"></pre>
+    <script>
+        const form = document.getElementById('predict-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(form));
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+        });
+    </script>
+</body>
+</html>
