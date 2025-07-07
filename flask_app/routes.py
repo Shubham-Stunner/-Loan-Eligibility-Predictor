@@ -24,7 +24,20 @@ def predict_route():
         return jsonify({'error': 'Invalid or missing JSON'}), 400
 
     try:
-        prediction, confidence = predict(model, data)
+        numeric_data = {
+            'age': float(data.get('age', 0)),
+            'income': float(data.get('income', 0.0)),
+            'credit_score': float(data.get('credit_score', 0.0)),
+            'loan_amount': float(data.get('loan_amount', 0.0)),
+            'loan_term': float(data.get('loan_term', 0)),
+            'employment_years': float(data.get('employment_years', 0.0)),
+            'existing_debt': float(data.get('existing_debt', 0.0))
+        }
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Invalid input data types'}), 400
+
+    try:
+        prediction, confidence = predict(model, numeric_data)
     except Exception as e:
         return jsonify({'error': f'Model prediction failed: {str(e)}'}), 500
 
@@ -34,13 +47,13 @@ def predict_route():
     try:
         from .models import LoanPrediction
         record = LoanPrediction(
-            age=data.get('age'),
-            income=data.get('income'),
-            credit_score=data.get('credit_score'),
-            loan_amount=data.get('loan_amount'),
-            loan_term=data.get('loan_term'),
-            employment_years=data.get('employment_years'),
-            existing_debt=data.get('existing_debt'),
+            age=int(numeric_data['age']),
+            income=numeric_data['income'],
+            credit_score=numeric_data['credit_score'],
+            loan_amount=numeric_data['loan_amount'],
+            loan_term=int(numeric_data['loan_term']),
+            employment_years=numeric_data['employment_years'],
+            existing_debt=numeric_data['existing_debt'],
             loan_approved=bool(prediction),
             confidence_score=float(confidence),
             inference_time_ms=inference_time
