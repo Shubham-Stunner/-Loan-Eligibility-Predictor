@@ -16,7 +16,7 @@ front‑end form is served at `http://localhost:5000/`.
 To generate a dummy model with the required **seven** input features run:
 
 ```bash
-python model/generate_dummy_model.py
+python3 model/generate_dummy_model.py
 ```
 
 This will create `model/loan_model_v1.h5`. Ensure it exists before starting the API so the prediction endpoint can load it correctly.
