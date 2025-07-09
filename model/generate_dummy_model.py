@@ -1,13 +1,14 @@
 # model/generate_dummy_model.py
 
-import sys
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 import numpy as np
 
-# Allow overriding the number of input features via CLI for flexibility.
-num_features = int(sys.argv[1]) if len(sys.argv) > 1 else 7
+# The /predict API expects seven features.  Keep the model definition
+# consistent and do not rely on command line arguments for the feature
+# count so Docker builds behave predictably.
+num_features = 7
 
 # Generate dummy input and output matching the API's expected features
 X = np.random.rand(100, num_features)
