@@ -7,30 +7,62 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Loan Eligibility Predictor</h1>
-    <form id="predict-form">
-        <label>Age: <input type="number" name="age" required></label>
-        <label>Income: <input type="number" name="income" step="0.01" required></label>
-        <label>Credit Score: <input type="number" name="credit_score" step="0.01" required></label>
-        <label>Loan Amount: <input type="number" name="loan_amount" step="0.01" required></label>
-        <label>Loan Term: <input type="number" name="loan_term" required></label>
-        <label>Employment Years: <input type="number" name="employment_years" step="0.1" required></label>
-        <label>Existing Debt: <input type="number" name="existing_debt" step="0.01" required></label>
-        <button type="submit">Predict</button>
-    </form>
-    <pre id="result"></pre>
+    <div class="container">
+        <h1>Loan Eligibility Predictor</h1>
+        <form id="predict-form" novalidate>
+            <label>Age
+                <input type="number" name="age" min="0" required>
+            </label>
+            <label>Income
+                <input type="number" name="income" step="0.01" min="0" required>
+            </label>
+            <label>Credit Score
+                <input type="number" name="credit_score" step="0.01" min="0" required>
+            </label>
+            <label>Loan Amount
+                <input type="number" name="loan_amount" step="0.01" min="0" required>
+            </label>
+            <label>Loan Term
+                <input type="number" name="loan_term" min="0" required>
+            </label>
+            <label>Employment Years
+                <input type="number" name="employment_years" step="0.1" min="0" required>
+            </label>
+            <label>Existing Debt
+                <input type="number" name="existing_debt" step="0.01" min="0" required>
+            </label>
+            <button type="submit">Predict</button>
+        </form>
+        <div id="result" class="hidden"></div>
+    </div>
     <script>
         const form = document.getElementById('predict-form');
+        const resultEl = document.getElementById('result');
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(form));
+
+            // Basic client-side validation
+            for (const value of Object.values(data)) {
+                if (value === '' || Number(value) < 0) {
+                    resultEl.textContent = 'Please fill out all fields with valid positive numbers.';
+                    resultEl.className = 'error';
+                    return;
+                }
+            }
+
             const response = await fetch('/predict', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            const result = await response.json();
-            document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+
+            const text = await response.text();
+            const approved = text.trim().toLowerCase() === 'true' || text.trim() === '1';
+
+            resultEl.textContent = approved ? 'Loan Approved' : 'Loan Not Approved';
+            resultEl.className = approved ? 'approved' : 'denied';
         });
     </script>
 </body>
