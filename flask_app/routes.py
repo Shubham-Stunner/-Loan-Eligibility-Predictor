@@ -69,3 +69,40 @@ def predict_route():
         'model_version': 'v1.0',
         'inference_time_ms': inference_time
     })
+
+
+@api_bp.route('/predict-ui', methods=['POST'])
+def predict_ui():
+    """Handle form submissions and display a friendly result page."""
+    start_time = time()
+
+    try:
+        features = [
+            float(request.form.get('age', 0)),
+            float(request.form.get('income', 0.0)),
+            float(request.form.get('credit_score', 0.0)),
+            float(request.form.get('loan_amount', 0.0)),
+            float(request.form.get('loan_term', 0)),
+            float(request.form.get('employment_years', 0.0)),
+            float(request.form.get('existing_debt', 0.0)),
+        ]
+    except (TypeError, ValueError):
+        return render_template(
+            'index.html',
+            result='Invalid input data',
+            result_class='danger'
+        )
+
+    # Run model prediction
+    prediction_probs = model.predict([features], verbose=0)[0][0]
+    eligible = prediction_probs >= 0.5
+
+    inference_time = (time() - start_time) * 1000
+
+    return render_template(
+        'index.html',
+        result='Loan Approved' if eligible else 'Loan Not Approved',
+        result_class='success' if eligible else 'danger',
+        confidence=float(prediction_probs),
+        inference_time=inference_time
+    )
