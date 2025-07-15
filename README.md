@@ -49,19 +49,5 @@ Build and start all services:
 docker-compose -f docker/docker-compose.yml up --build -d
 ```
 
-The API will be available at `http://localhost:5000/predict`. A simple HTML
-front-end form is served at `http://localhost:5000/`.
-
-Example payload:
-
-```json
-{
-  "age": 30,
-  "income": 600000,
-  "credit_score": 750,
-  "loan_amount": 250000,
-  "loan_term": 10,
-  "employment_years": 4,
-  "existing_debt": 10000
-}
+The App will be available at `http://localhost:5000/`.
 ```
