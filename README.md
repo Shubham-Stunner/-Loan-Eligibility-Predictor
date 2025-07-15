@@ -49,5 +49,4 @@ Build and start all services:
 docker-compose -f docker/docker-compose.yml up --build -d
 ```
 
-The App will be available at `http://localhost:5000/`.
-```
+The App will be available at `http://localhost:5000/`
